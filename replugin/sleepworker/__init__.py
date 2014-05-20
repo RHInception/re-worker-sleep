@@ -53,25 +53,22 @@ class SleepWorker(Worker):
                 params = body['parameters']
             except KeyError:
                 raise SleepWorkerError(
-                    'Params dictionary not passed to SleepWorker.'
+                    'Parameters dictionary not passed to SleepWorker.'
                     ' Nothing to do!')
-            if params['seconds'] not in self._config.keys():
-                raise SleepWorkerError(
-                    'This worker only handles: %s' % self._config.keys())
-
             try:
                 params['seconds'] = float(params['seconds'])
+            except KeyError:
+                raise SleepWorkerError('seconds is a required parameter.')
             except ValueError:
-                raise SleepWorkerError('Seconds must be an int or float')
+                raise SleepWorkerError('seconds must be an int or float')
 
             output.info('Executing sleep(%s) ...' % params['seconds'])
-
             self.app_logger.info('Sleeping for %s' % params['seconds'])
-
-            # TODO: sleep stuff here
-
             output.debug('Sleeping for %s seconds' % params['seconds'])
 
+            # Sleep it off
+            sleep(params['seconds'])
+            # Send out responses
             self.app_logger.info('Success for sleep(%s)' % params['seconds'])
             self.send(
                 properties.reply_to,
