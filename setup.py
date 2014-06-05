@@ -17,11 +17,16 @@
 import os
 import sys
 
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    import warnings
+    warnings.warn('No setuptools. Script creation will be skipped.')
+    from distutils.core import setup
 
 
 setup(
-    name='sleepworker',
+    name='reworkersleep',
     version='0.0.1',
     description='',
     author='See AUTHORS file',
@@ -29,5 +34,10 @@ setup(
     url='https://github.com/rhinception/re-worker-sleep',
     license='AGPLv3',
     package_dir={'replugin': 'replugin'},
-    packages=['replugin', 'replugin.sleepworker']
+    packages=['replugin', 'replugin.sleepworker'],
+    entry_points={
+        'console_scripts': [
+            're-worker-sleep = replugin.sleepworker:main',
+        ],
+    }
 )
