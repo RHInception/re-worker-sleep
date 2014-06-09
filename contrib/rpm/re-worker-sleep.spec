@@ -10,7 +10,7 @@
 Name: re-worker-sleep
 Summary: RE Worker which sleeps for a number of seconds
 Version: 0.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 Group: Applications/System
 License: AGPLv3
@@ -19,7 +19,7 @@ Url: https://github.com/rhinception/re-worker-sleep
 
 BuildArch: noarch
 BuildRequires: python2-devel, python-setuptools
-Requires: reworker
+Requires: re-worker
 
 %description
 A Release Engine Worker Plugin that sleeps for a period of seconds.
@@ -38,5 +38,8 @@ A Release Engine Worker Plugin that sleeps for a period of seconds.
 %dir %{python2_sitelib}/%{_pkg_name}
 
 %changelog
+* Fri Jun  9 2014 Ryan Cook <rcook@redhat.com> - 0.0.1-2
+- Requires re-worker rather than reworker
+
 * Thu Jun  5 2014 Steve Milner <stevem@gnulinux.et> - 0.0.1-1
 - First release
