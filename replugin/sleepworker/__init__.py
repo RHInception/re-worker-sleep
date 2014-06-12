@@ -103,17 +103,8 @@ class SleepWorker(Worker):
 
 
 def main():  # pragma: no cover
-    mq_conf = {
-        'server': '127.0.0.1',
-        'port': 5672,
-        'vhost': '/',
-        'user': 'guest',
-        'password': 'guest',
-    }
-    worker = SleepWorker(
-        mq_conf,
-        output_dir='/tmp/logs/')
-    worker.run_forever()
+    from reworker.worker import runner
+    runner(SleepWorker)
 
 
 if __name__ == '__main__':  # pragma: no cover
