@@ -23,12 +23,47 @@
 
 
 NAME := re-worker-sleep
+SHORTNAME := replugin
+TESTPACKAGE := replugin
+
 RPMSPECDIR := ./contrib/rpm/
 RPMSPEC := $(RPMSPECDIR)/re-worker-sleep.spec
 
 sdist: clean
 	python setup.py sdist
-	rm -fR recore.egg-info
+	rm -fR $(SHORTNAME).egg-info
+
+virtualenv:
+	@echo "#############################################"
+	@echo "# Creating a virtualenv"
+	@echo "#############################################"
+	virtualenv $(NAME)env
+	# There is nothing from requirements.txt we need (until reworker is in pypi).
+	. $(NAME)env/bin/activate && pip install pep8 nose coverage mock
+	# If there are any special things to install do it here
+	. $(NAME)env/bin/activate && pip install git+https://github.com/RHInception/re-worker.git
+
+ci-unittests:
+	@echo "#############################################"
+	@echo "# Running Unit Tests in virtualenv"
+	@echo "#############################################"
+	. $(NAME)env/bin/activate && nosetests -v --with-cover --cover-min-percentage=80 --cover-package=$(TESTPACKAGE) test/
+
+ci-list-deps:
+	@echo "#############################################"
+	@echo "# Listing all pip deps"
+	@echo "#############################################"
+	. $(NAME)env/bin/activate && pip freeze
+
+ci-pep8:
+	@echo "#############################################"
+	@echo "# Running PEP8 Compliance Tests in virtualenv"
+	@echo "#############################################"
+	. $(NAME)env/bin/activate && pep8 --ignore=E501,E121,E124 $(SHORTNAME)/
+
+ci: clean virtualenv ci-list-deps ci-pep8 ci-unittests
+	:
+
 
 tests: unittests pep8 pyflakes
 	:
@@ -37,25 +72,27 @@ unittests:
 	@echo "#############################################"
 	@echo "# Running Unit Tests"
 	@echo "#############################################"
-	nosetests -v
+	nosetests -v --with-cover --cover-min-percentage=80 --cover-package=$(TESTPACKAGE) test/
+
 
 clean:
 	@find . -type f -regex ".*\.py[co]$$" -delete
 	@find . -type f \( -name "*~" -or -name "#*" \) -delete
-	@rm -fR build dist rpm-build MANIFEST htmlcov .coverage recore.egg-info
+	@rm -fR build dist rpm-build MANIFEST htmlcov .coverage $(SHORTNAME).egg-info
+	@rm -rf $(NAME)env
 
 pep8:
 	@echo "#############################################"
 	@echo "# Running PEP8 Compliance Tests"
 	@echo "#############################################"
-	pep8 --ignore=E501,E121,E124 src/recore/
+	pep8 --ignore=E501,E121,E124 $(SHORTNAME)/
 
 pyflakes:
 	@echo "#############################################"
 	@echo "# Running Pyflakes Sanity Tests"
 	@echo "# Note: most import errors may be ignored"
 	@echo "#############################################"
-	-pyflakes src/recore
+	-pyflakes src/$(SHORTNAME)
 
 rpmcommon: sdist
 	@mkdir -p rpm-build
