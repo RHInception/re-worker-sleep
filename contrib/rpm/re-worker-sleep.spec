@@ -10,7 +10,7 @@
 Name: re-worker-sleep
 Summary: RE Worker which sleeps for a number of seconds
 Version: 0.0.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 Group: Applications/System
 License: AGPLv3
@@ -36,9 +36,12 @@ A Release Engine Worker Plugin that sleeps for a period of seconds.
 %files -f re-worker-sleep-files.txt
 %doc README.md LICENSE AUTHORS
 %dir %{python2_sitelib}/%{_pkg_name}
-%exclude %{python2_sitelib}/%{_pkg_name}/__init__.py
+%exclude %{python2_sitelib}/%{_pkg_name}/__init__.py*
 
 %changelog
+* Tue Jun 17 2014 Ryan Cook <rcook@redhat.com> - 0.0.1-5
+- Exclude __init__.py*
+
 * Tue Jun 17 2014 Ryan Cook <rcook@redhat.com> - 0.0.1-4
 - Exclude __init__.py
 
