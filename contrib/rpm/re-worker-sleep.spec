@@ -10,7 +10,7 @@
 Name: re-worker-sleep
 Summary: RE Worker which sleeps for a number of seconds
 Version: 0.0.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 Group: Applications/System
 License: AGPLv3
@@ -34,11 +34,15 @@ A Release Engine Worker Plugin that sleeps for a period of seconds.
 %{__python2} setup.py install -O1 --root=$RPM_BUILD_ROOT --record=re-worker-sleep-files.txt
 
 %files -f re-worker-sleep-files.txt
+%defattr(-, root, root)
 %doc README.md LICENSE AUTHORS
 %dir %{python2_sitelib}/%{_pkg_name}
 %exclude %{python2_sitelib}/%{_pkg_name}/__init__.py*
 
 %changelog
+* Wed Jun 18 2014 Steve Milner <stevem@gnulinux.net> - 0.0.1-6
+- Defattr not being used in files section.
+
 * Tue Jun 17 2014 Ryan Cook <rcook@redhat.com> - 0.0.1-5
 - Exclude __init__.py*
 
